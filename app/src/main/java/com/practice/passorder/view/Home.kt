@@ -1,5 +1,6 @@
 package com.practice.passorder.view
 
+import android.view.WindowInsets
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.expandVertically
 import androidx.compose.animation.shrinkVertically
@@ -17,20 +18,29 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AccountBox
 import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.DateRange
+import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.KeyboardArrowUp
+import androidx.compose.material.icons.filled.Notifications
+import androidx.compose.material.icons.filled.Place
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.icons.filled.ShoppingCart
 import androidx.compose.material3.Card
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -47,6 +57,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
@@ -71,13 +82,15 @@ fun HomeMain() {
     }
     val interactionSource = remember { MutableInteractionSource() }
     val textFieldColor = Color(0xFFF2F2F2)
+    val focusManager = LocalFocusManager.current
     LazyColumn(
         modifier = Modifier
             .fillMaxSize()
             .background(Color.White)
+            .systemBarsPadding()
+            .clickable { focusManager.clearFocus() }
     ) {
         item {
-            Spacer(modifier = Modifier.size(16.dp))
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -131,7 +144,8 @@ fun HomeMain() {
             Spacer(modifier = Modifier.size(8.dp))
             TabRow(selectedTabIndex = selectedTabIndex, contentColor = Color.Black) {
                 tabs.forEachIndexed { index, title ->
-                    Tab(selected = selectedTabIndex == index,
+                    Tab(
+                        selected = selectedTabIndex == index,
                         onClick = { selectedTabIndex = index },
                         text = { Text(title) },
                         selectedContentColor = Color.Black
@@ -150,6 +164,7 @@ fun HomeMain() {
 fun ListOrder() {
     Column(modifier = Modifier.fillMaxSize()) {
         BirthdaySection()
+        middleMenu()
     }
 }
 
@@ -166,7 +181,78 @@ fun ViewPager() {
 }
 
 @Composable
-fun menu() {
+fun middleMenu() {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(70.dp)
+            .background(Color.LightGray)
+            .padding(8.dp),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.SpaceBetween
+    ) {
+
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center,
+            modifier = Modifier.clickable {
+                //TODO
+            }
+        ) {
+
+            Icon(imageVector = Icons.Default.Email, contentDescription = "coupon")
+            Text("쿠폰함", fontSize = 12.sp)
+        }
+
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center,
+            modifier = Modifier.clickable {
+                //TODO
+            }
+        ) {
+            Icon(imageVector = Icons.Default.Place, contentDescription = "point/stamp")
+            Text("포인트/스탬프", fontSize = 12.sp)
+        }
+
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center,
+            modifier = Modifier.clickable {
+                //TODO
+            }
+        ) {
+            Icon(imageVector = Icons.Default.Notifications, contentDescription = "alarm")
+            Text("알림", fontSize = 12.sp)
+        }
+
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center,
+            modifier = Modifier.clickable {
+                //TODO
+            }
+        ) {
+            Icon(imageVector = Icons.Default.ShoppingCart, contentDescription = "market")
+            Text("적립마켓", fontSize = 12.sp)
+        }
+
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center,
+            modifier = Modifier.clickable {
+                //TODO
+            }
+        ) {
+            Icon(imageVector = Icons.Default.AccountBox, contentDescription = "gift")
+            Text("선물하기", fontSize = 12.sp)
+        }
+
+    }
+}
+
+@Composable
+fun bottomNavigation() {
 
 }
 
@@ -174,7 +260,7 @@ fun menu() {
 fun BirthdaySection() {
     var expanded by remember { mutableStateOf(false) }
     Card(modifier = Modifier.padding(8.dp)) {
-        Column(modifier = Modifier.fillMaxWidth()) {
+        Column(modifier = Modifier.fillMaxWidth().background(Color.LightGray)) {
             // 제목과 드롭다운 애로우 버튼
             Row(
                 modifier = Modifier
@@ -183,7 +269,7 @@ fun BirthdaySection() {
                     .padding(8.dp),
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                Row{
+                Row {
                     Icon(imageVector = Icons.Default.DateRange, contentDescription = "")
                     Spacer(modifier = Modifier.width(8.dp))
                     Text("생일 축하해 주세요!", fontSize = 15.sp, fontWeight = FontWeight.Bold)
@@ -202,10 +288,14 @@ fun BirthdaySection() {
                 exit = shrinkVertically()
             ) {
                 // 펼쳐졌을 때 표시할 내용
-                Column(modifier = Modifier.fillMaxWidth().padding(8.dp)) {
+                Column (
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(8.dp)
+                ) {
                     BirthdayItem(name = "문병진", date = "10.30")
                     BirthdayItem(name = "전유미", date = "10.31")
-                    // 추가 생일 아이템들...
+                    // 추가 생일 아이템들...LazyRow로 item들 리스트로 받아서 표시
                 }
             }
         }
