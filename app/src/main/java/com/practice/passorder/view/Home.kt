@@ -5,6 +5,7 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.expandVertically
 import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -27,6 +28,8 @@ import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
@@ -53,10 +56,13 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.VisualTransformation
@@ -64,6 +70,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import coil.compose.AsyncImage
+import com.practice.passorder.R
 
 @Preview
 @Composable
@@ -141,7 +149,7 @@ fun HomeMain() {
                 }
 
             }
-            Spacer(modifier = Modifier.size(8.dp))
+            Spacer(modifier = Modifier.size(4.dp))
             TabRow(selectedTabIndex = selectedTabIndex, contentColor = Color.Black) {
                 tabs.forEachIndexed { index, title ->
                     Tab(
@@ -162,9 +170,15 @@ fun HomeMain() {
 
 @Composable
 fun ListOrder() {
+    val imageList = listOf(
+        R.drawable.event1,
+        R.drawable.event2,
+        R.drawable.event3
+    )
     Column(modifier = Modifier.fillMaxSize()) {
         BirthdaySection()
         middleMenu()
+        Pager(imageList, modifier = Modifier)
     }
 }
 
@@ -175,9 +189,53 @@ fun MapOrder() {
     }
 }
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun ViewPager() {
+fun Pager(images: List<Int>, modifier: Modifier = Modifier
+    ) {
+        Box(modifier = modifier) {
+            val pagerState = rememberPagerState(pageCount = { images.size })
 
+            // 이미지 페이저
+            HorizontalPager(
+                state = pagerState,
+                modifier = Modifier.fillMaxWidth()
+            ) { page ->
+                Card(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(8.dp)
+                ) {
+                    AsyncImage(
+                        model = images[page],
+                        contentDescription = "Event Image ${page + 1}",
+                        contentScale = ContentScale.Crop,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(200.dp)
+                    )
+                }
+            }
+
+            // 페이지 인디케이터
+            Row(
+                modifier = Modifier
+                    .align(Alignment.BottomCenter)
+                    .padding(bottom = 16.dp),
+                horizontalArrangement = Arrangement.Center
+            ) {
+                repeat(images.size) { iteration ->
+                    val color = if (pagerState.currentPage == iteration) Color.White else Color.Gray
+                    Box(
+                        modifier = Modifier
+                            .padding(2.dp)
+                            .clip(CircleShape)
+                            .background(color)
+                            .size(8.dp)
+                    )
+                }
+            }
+        }
 }
 
 @Composable
