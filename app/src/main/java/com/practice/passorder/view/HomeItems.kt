@@ -241,10 +241,7 @@ fun BirthdayItem(name: String, date: String) {
     }
 }
 
-@Composable
-fun Call_Shop(){
 
-}
 
 @Composable
 fun ShopList(title : String){

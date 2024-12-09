@@ -179,11 +179,23 @@ fun ListOrder() {
         BirthdaySection()
         middleMenu()
         Pager(imageList, modifier = Modifier)
+        Call_Shop()
     }
 }
 
 
+@Composable
+fun Call_Shop(){
+    Card(modifier = Modifier.fillMaxWidth().height(150.dp).padding(8.dp)) {
+        Column {
+            Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween){
+                Text("나와 가까운 매장", fontSize = 20.sp, fontWeight = FontWeight.Bold, modifier = Modifier.padding(8.dp))
+                Text("모두 보기 > ", fontSize = 12.sp, fontWeight = FontWeight.Bold,modifier = Modifier.padding(8.dp).clickable {  })
+            }
+        }
+    }
 
+}
 @Composable
 fun bottomNavigation() {
 
