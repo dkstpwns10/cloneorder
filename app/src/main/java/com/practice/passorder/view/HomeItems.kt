@@ -29,6 +29,7 @@ import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.material.icons.filled.Place
 import androidx.compose.material.icons.filled.ShoppingCart
 import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -172,7 +173,7 @@ fun middleMenu() {
 @Composable
 fun BirthdaySection() {
     var expanded by remember { mutableStateOf(false) }
-    Card(modifier = Modifier.padding(8.dp)) {
+    Card(modifier = Modifier.padding(8.dp),colors = CardDefaults.cardColors(containerColor = Color(0xFFF2F2F2))) {
         Column(modifier = Modifier.fillMaxWidth().background(Color.LightGray)) {
             // 제목과 드롭다운 애로우 버튼
             Row(
