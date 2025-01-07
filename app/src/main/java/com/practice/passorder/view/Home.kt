@@ -181,11 +181,13 @@ fun ListOrder() {
         R.drawable.event2,
         R.drawable.event3
     )
+    val title = arrayListOf("내 주변 적립 판매중인 매장", "내 주변 스토리가 많은 매장", "내 주변 먹고갈 수 있는 매장")
     Column(modifier = Modifier.fillMaxSize()) {
         BirthdaySection()
         middleMenu()
         Pager(imageList, modifier = Modifier)
         Call_Shop()
+        Shop_List(title[0])
     }
 }
 
@@ -203,6 +205,31 @@ fun Call_Shop(){
         Column {
             Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween){
                 Text("나와 가까운 매장", fontSize = 20.sp, fontWeight = FontWeight.Bold, modifier = Modifier.padding(8.dp))
+                Text("모두 보기 > ", fontSize = 12.sp, fontWeight = FontWeight.Bold,modifier = Modifier.padding(8.dp).clickable {  })
+            }
+            LazyRow {
+                items(5){
+                    CallShop_Item(list[it])
+                }
+            }
+        }
+    }
+
+}
+
+@Composable
+fun Shop_List(title : String){
+    val list = listOf(
+        R.drawable.shop1,
+        R.drawable.shop2,
+        R.drawable.shop3,
+        R.drawable.shop4,
+        R.drawable.shop5
+    )
+    Card(modifier = Modifier.fillMaxWidth().height(350.dp).padding(8.dp), colors = CardDefaults.cardColors(containerColor = Color(0xFFF2F2F2))) {
+        Column {
+            Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween){
+                Text(title, fontSize = 20.sp, fontWeight = FontWeight.Bold, modifier = Modifier.padding(8.dp))
                 Text("모두 보기 > ", fontSize = 12.sp, fontWeight = FontWeight.Bold,modifier = Modifier.padding(8.dp).clickable {  })
             }
             LazyRow {
