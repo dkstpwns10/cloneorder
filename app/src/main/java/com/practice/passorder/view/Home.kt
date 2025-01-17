@@ -78,6 +78,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import com.practice.passorder.R
+import com.practice.passorder.domain.Shop
 
 @Preview
 @Composable
@@ -181,51 +182,48 @@ fun ListOrder() {
         R.drawable.event2,
         R.drawable.event3
     )
-    val title = arrayListOf("내 주변 적립 판매중인 매장", "내 주변 스토리가 많은 매장", "내 주변 먹고갈 수 있는 매장")
+    val title = arrayListOf("나와 가까운 매장","내 주변 적립 판매중인 매장", "내 주변 스토리가 많은 매장", "내 주변 먹고갈 수 있는 매장")
+    val item1: Shop = Shop(
+        shopId = 1,
+        name = "메가MGC커피",
+        image = R.drawable.shop1,
+        call = "031-123-4567",
+        spot = "수지도서관점",
+        favorite = 6,
+        location = "경기도 용인시 어쩌구"
+    )
+    val item2: Shop = Shop(
+        shopId = 2,
+        name = "메가MGC커피",
+        image = R.drawable.shop2,
+        call = "031-123-2222",
+        spot = "수지점",
+        favorite = 6,
+        location = "경기도 용인시 어쩌구"
+    )
+    val item3: Shop = Shop(
+        shopId = 3,
+        name = "메가MGC커피",
+        image = R.drawable.shop3,
+        call = "031-111-2222",
+        spot = "수지도서관점",
+        favorite = 6,
+        location = "경기도 용인시 어쩌구"
+    )
+    val items: List<Shop> = listOf(item1, item2, item3)
     Column(modifier = Modifier.fillMaxSize()) {
         BirthdaySection()
         middleMenu()
         Pager(imageList, modifier = Modifier)
-        Call_Shop()
-        Shop_List(title[0])
-    }
-}
-
-
-@Composable
-fun Call_Shop(){
-    val list = listOf(
-        R.drawable.shop1,
-        R.drawable.shop2,
-        R.drawable.shop3,
-        R.drawable.shop4,
-        R.drawable.shop5
-    )
-    Card(modifier = Modifier.fillMaxWidth().height(350.dp).padding(8.dp), colors = CardDefaults.cardColors(containerColor = Color(0xFFF2F2F2))) {
-        Column {
-            Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween){
-                Text("나와 가까운 매장", fontSize = 20.sp, fontWeight = FontWeight.Bold, modifier = Modifier.padding(8.dp))
-                Text("모두 보기 > ", fontSize = 12.sp, fontWeight = FontWeight.Bold,modifier = Modifier.padding(8.dp).clickable {  })
-            }
-            LazyRow {
-                items(5){
-                    CallShop_Item(list[it])
-                }
-            }
+        for(i in title.indices){
+            Shop_List(title[i], items, type = i)
         }
     }
-
 }
 
 @Composable
-fun Shop_List(title : String){
-    val list = listOf(
-        R.drawable.shop1,
-        R.drawable.shop2,
-        R.drawable.shop3,
-        R.drawable.shop4,
-        R.drawable.shop5
-    )
+fun Shop_List(title: String, items: List<Shop>, type: Int){
+
     Card(modifier = Modifier.fillMaxWidth().height(350.dp).padding(8.dp), colors = CardDefaults.cardColors(containerColor = Color(0xFFF2F2F2))) {
         Column {
             Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween){
@@ -233,33 +231,98 @@ fun Shop_List(title : String){
                 Text("모두 보기 > ", fontSize = 12.sp, fontWeight = FontWeight.Bold,modifier = Modifier.padding(8.dp).clickable {  })
             }
             LazyRow {
-                items(5){
-                    CallShop_Item(list[it])
+                items(items.size){
+                    if(type == 0){
+                        CallShop_Item(items[it])
+                    }else if(type == 1){
+                        Column {
+                            StampShopList(items[it])
+                        }
+
+                    }else if(type == 2){
+                        CallShop_Item(items[it])
+                    }else if(type == 3){
+                        StampShopList(items[it])
+                    }
+
                 }
             }
         }
     }
 
 }
+/*
+@Composable
+fun FoodShopList(shop: Shop) {
+
+}
 
 @Composable
-fun CallShop_Item(image : Int){
+fun StoryShopList(shop: Shop) {
+
+}
+*/
+@Composable
+fun CallShop_Item(item: Shop){
     Card(modifier = Modifier.padding(8.dp).clickable { /*TODO*/ },colors = CardDefaults.cardColors(containerColor = Color(0xFFFFFFFF))){
         Column(modifier = Modifier.height(280.dp)) {
-            Image(painter = painterResource(id = image), modifier = Modifier.size(170.dp).clip(
+            Image(painter = painterResource(id = item.image), modifier = Modifier.size(170.dp).clip(
                 RoundedCornerShape(8.dp)
             ), contentScale = ContentScale.Crop,contentDescription = "")
-            Text(text = "전화", fontSize = 12.sp)
-            Text(text = "메가MGC커피", modifier = Modifier.width(160.dp), fontWeight = FontWeight.Bold)
-            Text(text = "수지신정마을점", modifier = Modifier.width(160.dp), fontWeight = FontWeight.Bold)
+            Text(text = "${item.call}", fontSize = 12.sp)
+            Text(text = item.name, modifier = Modifier.width(160.dp), fontWeight = FontWeight.Bold)
+            Text(text = item.spot, modifier = Modifier.width(160.dp), fontWeight = FontWeight.Bold)
         }
     }
 }
 
 @Composable
-fun bottomNavigation() {
-
+fun StampShopList(item: Shop) {
+    Row() {
+        Image(
+            painter = painterResource(id = item.image),
+            modifier = Modifier
+                .size(100.dp)
+                .clip(
+                    RoundedCornerShape(8.dp)
+                ),
+            contentScale = ContentScale.Crop,
+            contentDescription = "${item.name}+${item.spot}"
+        )
+        Column() {
+            Text(
+                text = item.name + " " + item.spot,
+                modifier = Modifier.width(160.dp),
+                fontWeight = FontWeight.Bold
+            )
+            Row {
+                Text(
+                    text = "거리계산 미터",
+                    modifier = Modifier.width(160.dp),
+                    fontWeight = FontWeight.Bold
+                )
+                Text(
+                    text = "거리계산 시간",
+                    modifier = Modifier.width(160.dp),
+                    fontWeight = FontWeight.Bold
+                )
+            }
+            Row {
+                Text(
+                    text = "스탬프 N개",
+                    modifier = Modifier.width(160.dp),
+                    fontWeight = FontWeight.Bold
+                )
+                Text(
+                    text = "쿠폰 N개",
+                    modifier = Modifier.width(160.dp),
+                    fontWeight = FontWeight.Bold
+                )
+            }
+        }
+    }
 }
+
 
 
 @Composable
